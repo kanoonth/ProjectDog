@@ -12,6 +12,7 @@ function Update () {
  	if (Input.GetMouseButtonDown(0)) {
              newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
              newPosition.z = transform.position.z;
+             Debug.Log(newPosition.x);
     }
     transform.position = Vector3.MoveTowards(transform.position, newPosition, speed * Time.deltaTime);
 	if(Input.GetKey(KeyCode.UpArrow)){
@@ -26,7 +27,6 @@ function Update () {
 	if(Input.GetKey(KeyCode.RightArrow)){
 		moveRight(0.1);
 	}
-	order();
 }
 
 function checkLimit(x2 : float,y2 : float){
@@ -60,26 +60,37 @@ function moveRight(val : float){
 	move(val,val);
 }
 
-function order(){
+function order(other : Collider2D){
 	var pos = this.transform.position;
-	var posX = this.transform.position;
+	var posX = other.transform.position;
+	
+	//pos.y += other.transform.position.y;
 	
 	if(posX != null){	
-		var rangeX = Mathf.Abs(pos.x - posX.x);
-		var rangeY = Mathf.Abs(pos.y - posX.y);
-		//TODO rotate the axis
+		//rotate the axis	
+		//var newX = pos.x * Mathf.Cos(-45) - pos.y * Mathf.Sin(-45);
+		var newY = pos.x * Mathf.Sin(-45) + pos.y * Mathf.Cos(-45);
 		
-		if(pos.y < posX.y){
+		//var newXOther = posX.x * Mathf.Cos(-45) - posX.y * Mathf.Sin(-45);
+		var newYOther = posX.x * Mathf.Sin(-45) + posX.y * Mathf.Cos(-45);
+		
+		if(newY < newYOther){
 			this.renderer.sortingOrder = 4;
-			Debug.Log("ice kak 44 up");
+			Debug.Log("up");
 		}
-		else if(pos.y > posX.y){
+		else if(newY > newYOther){
 			this.renderer.sortingOrder = 2;
-			Debug.Log("ice kak 22 down");
+			Debug.Log("down");
 		}
 	}
 }
 
-function OnTriggerEnter2D(other: Collider2D) {
-	Debug.Log(other);
+function OnTriggerEnter2D(other : Collider2D) {
+	order(other);
 }
+
+function OnTriggerStay2D(other : Collider2D) {
+	order(other);
+}
+
+

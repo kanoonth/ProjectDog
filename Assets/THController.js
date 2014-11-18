@@ -13,6 +13,5 @@ function OnTriggerEnter2D(other: Collider2D) {
 }
 
 function OnCollisionEnter2D(coll: Collision2D) {
-	
 	Debug.Log(coll);
 }
